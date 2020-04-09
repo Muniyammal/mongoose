@@ -1,11 +1,14 @@
 const express = require("express");
-require('./utils/db');
-const User = require ('./utils/db');
+require('./utils/db'); 
+const User = require ('./utils/db'); 
 const auth = require('./middleware/auth');
 const app = express();
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-
+const exphbs  = require('express-handlebars');
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
+ 
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -25,8 +28,15 @@ let mailOptions = {
     from:'vinayagajo25@gmail.com',
     to:'muniyammal@calibraint.com',
     subject:'mongodb auth',
-    text:'localhost:1234/users/me'
+    text:'Click to verify the database',
+    template: 'index'
+    
+
+
 }
+
+
+
 transporter.sendMail(mailOptions,function(err,sucess){
     if(err){
         console.log('error occurs',err);
@@ -105,7 +115,9 @@ app.delete('/users/:id',auth,async (req,res) =>{
     }catch(e){
         res.send(e.message);
     }
-})
+});
 app.listen(1234);
 console.log("Ready to use port 1234");
-app.get('/',(req,res) => res.send("Testing"));
+app.get('/',(req,res)=>{
+    res.send('Testing');
+});
