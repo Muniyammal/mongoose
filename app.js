@@ -2,13 +2,11 @@ const express = require("express");
 require('./utils/db'); 
 const User = require ('./utils/db'); 
 const auth = require('./middleware/auth');
+const index = require('./views/index');
 const app = express();
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const exphbs  = require('express-handlebars');
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
- 
+const hbs  = require('nodemailer-express-handlebars');
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -24,6 +22,19 @@ const transporter = nodemailer.createTransport({
         rejectUnauthorized: false
       }
 });
+const handlebarOptions = {
+    viewEngine: { 
+      extName: '.hbs',
+      partialsDir: 'views/partials/',
+      layoutsDir: 'views/index/'
+    },
+    viewPath:'views/index/',
+    extName: '.hbs',
+
+  };
+  transporter.use('compile', hbs(handlebarOptions));
+  
+  
 let mailOptions = {
     from:'vinayagajo25@gmail.com',
     to:'muniyammal@calibraint.com',
