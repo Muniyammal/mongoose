@@ -5,38 +5,23 @@ const auth = require('./middleware/auth');
 const app = express();
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const exphbs  = require('express-handlebars');
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
- 
+const mailgun = require("mailgun-js");
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port:465,
-  secure:true,
-    service :'smtp.gmail.com',
-    auth:{
-        user:'vinayagajo25@gmail.com',
-        pass:'muthumuni'
-    },
-    tls: {
-        // do not fail on invalid certs
-        rejectUnauthorized: false
-      }
-});
+    const data={
+        apiKey: "7cc79225eab6ba32cc9f277ccb907e5f-915161b7-300d7f57", 
+        domain:'sandbox200ae189ebaf40d6a106841500aad1df.mailgun.org'
+  };
+  const transporter = nodemailer.createTransport(mailgun(data));
+   
 let mailOptions = {
-    from:'vinayagajo25@gmail.com',
+    from:"Mailgun Sandbox <postmaster@sandbox200ae189ebaf40d6a106841500aad1df.mailgun.org>",
     to:'muniyammal@calibraint.com',
     subject:'mongodb auth',
-    text:'Click to verify the database',
-    template: 'index'
-    
+    text:'Click to verify the database http://localhost:1234'
+     
 
 
 }
-
-
-
 transporter.sendMail(mailOptions,function(err,sucess){
     if(err){
         console.log('error occurs',err);
